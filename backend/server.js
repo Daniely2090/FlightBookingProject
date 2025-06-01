@@ -117,9 +117,9 @@ async function initializeFlightPlans() {
   }
 }
 
-// Sync models and initialize data with force:true to recreate tables
-sequelize.sync({ force: true }).then(() => {
-  console.log('✅ Database synced successfully (force:true - tables recreated)');
+// ✅ שינוי כאן – בלי force:true!
+sequelize.sync().then(() => {
+  console.log('✅ Database synced successfully');
   initializeFlightPlans();
 });
 
@@ -140,7 +140,6 @@ app.get('/flights', async (req, res) => {
 
 app.get('/flights/search', async (req, res) => {
   const { origin, destination } = req.query;
-
   try {
     const flights = await FlightPlan.findAll({
       where: {
