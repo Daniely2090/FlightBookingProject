@@ -41,7 +41,7 @@ describe('Flight Booking API Tests', () => {
 
   describe('GET /flights/search', () => {
     it('should return a list of flights matching search criteria', async () => {
-      const response = await request(`http://localhost:${PORT}`).get('/flights/search?origin=New York&destination=Los Angeles');
+      const response = await request(`http://localhost:${PORT}`).get('/flights/search?origin=Tel Aviv&destination=Phuket');
       expect(response.status).toBe(200);
       expect(response.body).toBeInstanceOf(Array);
       expect(response.body.length).toBeGreaterThan(0);
