@@ -1,0 +1,34 @@
+
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: flightbooking_staging_db
+    environment:
+      POSTGRES_DB: flightdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db_data_staging:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: db
+      DB_USER: user
+      DB_PASS: password
+    depends_on:
+      - db
+    ports:
+      - "5003:5002"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3001:3000"
+
+volumes:
+  db_data_staging:
