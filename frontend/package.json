@@ -17,7 +17,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "cypress:open": "cypress open",
+    "dev:backend": "cd ../backend && npm install && npm start",
+    "dev:frontend": "react-scripts start",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "cy:run": "start-server-and-test dev:all http://localhost:3000 cypress:run",
     "cypress:run": "cypress run"
   },
   "eslintConfig": {
@@ -39,6 +42,8 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-transform-private-property-in-object": "^7.25.9"
+    "@babel/plugin-transform-private-property-in-object": "^7.25.9",
+    "concurrently": "^9.1.2",
+    "start-server-and-test": "^2.0.12"
   }
 }
