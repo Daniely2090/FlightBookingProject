@@ -50,7 +50,8 @@ jobs:
         cd frontend
         npm install
 
-    - name: Run Frontend Tests
+    - name: Run Cypress End-to-End Tests
       run: |
         cd frontend
-        npm test || echo "No frontend tests yet"
+        npm install
+        npm run cy:run
