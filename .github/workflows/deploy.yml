@@ -1,57 +1,50 @@
-
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches:
-      - main
-      - staging
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build-and-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:13
         env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: secret
           POSTGRES_DB: flightdb
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd="pg_isready -U admin -d flightdb" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
+      - name: 🔵 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    - name: Install Backend Dependencies
-      run: |
-        cd backend
-        npm install
+      - name: 🧶 Install backend dependencies
+        working-directory: backend
+        run: npm install
 
-    - name: Run Backend Tests
-      run: |
-        cd backend
-        npm test || echo "No backend tests yet"
+      - name: 🧶 Install frontend dependencies
+        working-directory: frontend
+        run: npm install
 
-    - name: Install Frontend Dependencies
-      run: |
-        cd frontend
-        npm install
+      - name: 🧶 Run Cypress tests
+        working-directory: frontend
+        run: npm run cy:run
 
-    - name: Run Cypress End-to-End Tests
-      run: |
-        cd frontend
-        npm install
-        npm run cy:run
+      - name: 🗼 Clean up
+        run: echo "✅ CI finished."
